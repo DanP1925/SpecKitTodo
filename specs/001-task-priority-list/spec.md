@@ -2,7 +2,7 @@
 
 **Feature Branch**: `001-task-priority-list`
 **Created**: 2026-04-04
-**Status**: Draft
+**Status**: Implemented
 **Input**: User description: "Build an android application that shows a to do list. I want to have simple list that orders based on two fields: If the task is important or if the task is urgent"
 
 ## User Scenarios & Testing *(mandatory)*

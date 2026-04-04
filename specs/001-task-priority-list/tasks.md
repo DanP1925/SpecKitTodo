@@ -96,9 +96,9 @@ All source paths are relative to the repository root.
 
 **Purpose**: Code quality and final validation across the feature.
 
-- [ ] T027 [P] Run `./gradlew ktlintCheck` and fix all violations across all source files
-- [ ] T028 Run `./gradlew test` — verify all JUnit 5 unit tests pass (GetPrioritizedTasksUseCaseTest, TaskMapperTest, TaskRepositoryImplTest, TaskListViewModelTest)
-- [ ] T029 Run `./gradlew connectedAndroidTest` — verify all Compose UI tests pass (TaskListScreenTest)
+- [x] T027 [P] Run `./gradlew ktlintCheck` and fix all violations across all source files
+- [x] T028 Run `./gradlew test` — verify all JUnit 5 unit tests pass (GetPrioritizedTasksUseCaseTest, TaskMapperTest, TaskRepositoryImplTest, TaskListViewModelTest)
+- [x] T029 Run `./gradlew connectedAndroidTest` — verify all Compose UI tests pass (TaskListScreenTest)
 
 ---
 

@@ -64,9 +64,12 @@ app/
 │   │   │   ├── TaskPriorityApp.kt              # @HiltAndroidApp Application
 │   │   │   ├── presentation/
 │   │   │   │   ├── tasklist/
-│   │   │   │   │   ├── TaskListScreen.kt       # Composable — root screen
+│   │   │   │   │   ├── TaskListScreen.kt       # Composable — root screen + previews
+│   │   │   │   │   ├── TaskItem.kt             # Composable — single task card with priority color
 │   │   │   │   │   ├── TaskListViewModel.kt    # Hilt ViewModel, exposes StateFlow
-│   │   │   │   │   └── TaskListUiState.kt      # Sealed UI state type
+│   │   │   │   │   ├── TaskListUiState.kt      # Sealed UI state: Loading, Empty, Success, Error
+│   │   │   │   │   ├── TaskListSemantics.kt    # Custom SemanticsPropertyKey for priority tier
+│   │   │   │   │   └── TaskListTestTags.kt     # Compose testTag constants
 │   │   │   │   └── theme/
 │   │   │   │       └── Theme.kt                # Material3 theme
 │   │   │   ├── domain/
@@ -103,6 +106,11 @@ app/
 │   │               └── TaskRepositoryImplTest.kt
 │   └── androidTest/                            # Compose UI tests (Robots pattern)
 │       └── kotlin/com/example/taskprioritylist/
+│           ├── HiltTestRunner.kt               # Custom runner using HiltTestApplication
+│           ├── di/
+│           │   └── TestDatabaseModule.kt       # @TestInstallIn replacing DatabaseModule
+│           ├── fake/
+│           │   └── FakeTaskRepository.kt       # In-memory TaskRepository for UI tests
 │           └── presentation/
 │               └── tasklist/
 │                   ├── robots/
