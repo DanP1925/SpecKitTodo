@@ -95,7 +95,7 @@ internal fun TaskListContent(uiState: TaskListUiState) {
     }
 }
 
-@Preview(showBackground = true)
+@Preview(name = "Loading", showBackground = true)
 @Composable
 private fun TaskListContentLoadingPreview() {
     TaskPriorityListTheme {
@@ -103,7 +103,7 @@ private fun TaskListContentLoadingPreview() {
     }
 }
 
-@Preview(showBackground = true)
+@Preview(name = "Empty", showBackground = true)
 @Composable
 private fun TaskListContentEmptyPreview() {
     TaskPriorityListTheme {
@@ -111,7 +111,7 @@ private fun TaskListContentEmptyPreview() {
     }
 }
 
-@Preview(showBackground = true)
+@Preview(name = "Success", showBackground = true)
 @Composable
 private fun TaskListContentSuccessPreview() {
     TaskPriorityListTheme {
@@ -144,7 +144,7 @@ private fun TaskListContentSuccessPreview() {
     }
 }
 
-@Preview(showBackground = true)
+@Preview(name = "Error", showBackground = true)
 @Composable
 private fun TaskListContentErrorPreview() {
     TaskPriorityListTheme {

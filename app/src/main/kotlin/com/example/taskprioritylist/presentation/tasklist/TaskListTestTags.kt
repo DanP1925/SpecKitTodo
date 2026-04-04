@@ -5,8 +5,4 @@ object TaskListTestTags {
     const val EMPTY_STATE = "empty_state"
 
     fun taskItem(title: String) = "task_item_$title"
-
-    fun importantBadge(title: String) = "badge_important_$title"
-
-    fun urgentBadge(title: String) = "badge_urgent_$title"
 }

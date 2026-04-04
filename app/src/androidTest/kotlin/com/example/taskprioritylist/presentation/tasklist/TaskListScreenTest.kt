@@ -3,6 +3,7 @@ package com.example.taskprioritylist.presentation.tasklist
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.taskprioritylist.MainActivity
+import com.example.taskprioritylist.R
 import com.example.taskprioritylist.domain.model.Task
 import com.example.taskprioritylist.fake.FakeTaskRepository
 import com.example.taskprioritylist.presentation.tasklist.robots.TaskListRobot
@@ -67,6 +68,14 @@ class TaskListScreenTest {
         composeRule.waitForIdle()
 
         robot.assertTaskHasPriorityTier("Critical task", PriorityTier.IMPORTANT_AND_URGENT)
+    }
+
+    @Test
+    fun given_repository_throws_error_when_screen_is_displayed_then_error_message_is_shown() {
+        fakeRepository.setError(RuntimeException("DB error"))
+        composeRule.waitForIdle()
+
+        robot.assertErrorMessageIsDisplayed(composeRule.activity.getString(R.string.error_loading_tasks))
     }
 
     @Test

@@ -19,18 +19,22 @@ import com.example.taskprioritylist.R
 import com.example.taskprioritylist.domain.model.Task
 
 @Composable
-fun TaskItem(task: Task) {
+fun TaskItem(
+    task: Task,
+    modifier: Modifier = Modifier,
+) {
     val containerColor = taskCardColor(isImportant = task.isImportant, isUrgent = task.isUrgent)
-    val tier = priorityTierOf(isImportant = task.isImportant, isUrgent = task.isUrgent)
+    val tier = task.toPriorityTier()
     val priorityLabel = priorityLabel(isImportant = task.isImportant, isUrgent = task.isUrgent)
+    val descriptionPart = if (!task.description.isNullOrBlank()) " ${task.description}." else ""
     Card(
         modifier =
-            Modifier
+            modifier
                 .fillMaxWidth()
                 .testTag(TaskListTestTags.taskItem(task.title))
                 .semantics(mergeDescendants = true) {
                     priorityTier = tier
-                    contentDescription = "${task.title}. $priorityLabel"
+                    contentDescription = "${task.title}.$descriptionPart $priorityLabel"
                 },
         colors = CardDefaults.cardColors(containerColor = containerColor),
     ) {
@@ -60,17 +64,6 @@ private fun taskCardColor(
         isImportant -> MaterialTheme.colorScheme.tertiaryContainer
         isUrgent -> MaterialTheme.colorScheme.secondaryContainer
         else -> MaterialTheme.colorScheme.surfaceVariant
-    }
-
-private fun priorityTierOf(
-    isImportant: Boolean,
-    isUrgent: Boolean,
-): String =
-    when {
-        isImportant && isUrgent -> PriorityTier.IMPORTANT_AND_URGENT
-        isImportant -> PriorityTier.IMPORTANT
-        isUrgent -> PriorityTier.URGENT
-        else -> PriorityTier.NONE
     }
 
 @Composable
