@@ -1,31 +1,29 @@
 <!--
 ## Sync Impact Report
 
-**Version Change**: [unversioned template] → 1.0.0
-**Bump Rationale**: Initial ratification — all placeholder tokens replaced with concrete
-governance derived from project setup, plan.md technical context, and conversation history.
+**Version Change**: 1.0.0 → 1.0.1
+**Bump Rationale**: PATCH — resolved outstanding ⚠ from v1.0.0: updated tasks-template.md to
+align test task language with Principle II (TDD mandatory).
 
 ### Modified Principles
-- None (initial ratification)
+- None
 
 ### Added Sections
-- Core Principles (I–V)
-- Technology Standards
-- Testing Standards
-- Governance
+- None
 
 ### Removed Sections
 - None
 
 ### Templates Requiring Updates
-- `.specify/templates/plan-template.md` ✅ — Constitution Check gate already present; no structural changes required.
-- `.specify/templates/spec-template.md` ✅ — Mandatory sections align with Principle I (Spec-First); no changes required.
-- `.specify/templates/tasks-template.md` ⚠ — Template marks test tasks as "OPTIONAL". Principle II mandates Test-First for this project. When generating tasks.md, test tasks MUST be treated as mandatory regardless of the template note.
-- `.specify/templates/agent-file-template.md` ✅ — Generic template; no outdated references found.
-- `.specify/templates/checklist-template.md` ✅ — Generic template; no constitution references found.
+- `.specify/templates/plan-template.md` ✅ — No changes required.
+- `.specify/templates/spec-template.md` ✅ — No changes required.
+- `.specify/templates/tasks-template.md` ✅ — Updated: "Tests are OPTIONAL" replaced with
+  mandatory TDD language per Principle II; section headers updated accordingly.
+- `.specify/templates/agent-file-template.md` ✅ — No changes required.
+- `.specify/templates/checklist-template.md` ✅ — No changes required.
 
 ### Deferred TODOs
-- None — all fields resolved from repo and conversation context.
+- None.
 -->
 
 # SpecKit Spike Constitution
@@ -133,4 +131,4 @@ Constitution Check section.
 **Compliance Review**: Constitution compliance MUST be verified at the Constitution Check
 gate in each `plan.md` before Phase 0 research and re-verified after Phase 1 design.
 
-**Version**: 1.0.0 | **Ratified**: 2026-04-04 | **Last Amended**: 2026-04-04
+**Version**: 1.0.1 | **Ratified**: 2026-04-04 | **Last Amended**: 2026-04-04
