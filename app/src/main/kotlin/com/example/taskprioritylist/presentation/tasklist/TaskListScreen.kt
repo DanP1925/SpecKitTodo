@@ -82,7 +82,7 @@ internal fun TaskListContent(uiState: TaskListUiState) {
 
                 is TaskListUiState.Error -> {
                     Text(
-                        text = state.message,
+                        text = stringResource(R.string.error_loading_tasks),
                         color = MaterialTheme.colorScheme.error,
                         modifier =
                             Modifier

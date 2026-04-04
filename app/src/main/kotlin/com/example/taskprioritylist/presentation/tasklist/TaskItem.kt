@@ -11,20 +11,27 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
+import com.example.taskprioritylist.R
 import com.example.taskprioritylist.domain.model.Task
 
 @Composable
 fun TaskItem(task: Task) {
     val containerColor = taskCardColor(isImportant = task.isImportant, isUrgent = task.isUrgent)
     val tier = priorityTierOf(isImportant = task.isImportant, isUrgent = task.isUrgent)
+    val priorityLabel = priorityLabel(isImportant = task.isImportant, isUrgent = task.isUrgent)
     Card(
         modifier =
             Modifier
                 .fillMaxWidth()
                 .testTag(TaskListTestTags.taskItem(task.title))
-                .semantics { priorityTier = tier },
+                .semantics(mergeDescendants = true) {
+                    priorityTier = tier
+                    contentDescription = "${task.title}. $priorityLabel"
+                },
         colors = CardDefaults.cardColors(containerColor = containerColor),
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -64,4 +71,16 @@ private fun priorityTierOf(
         isImportant -> PriorityTier.IMPORTANT
         isUrgent -> PriorityTier.URGENT
         else -> PriorityTier.NONE
+    }
+
+@Composable
+private fun priorityLabel(
+    isImportant: Boolean,
+    isUrgent: Boolean,
+): String =
+    when {
+        isImportant && isUrgent -> stringResource(R.string.priority_important_and_urgent)
+        isImportant -> stringResource(R.string.priority_important)
+        isUrgent -> stringResource(R.string.priority_urgent)
+        else -> stringResource(R.string.priority_none)
     }

@@ -1,10 +1,12 @@
 package com.example.taskprioritylist.presentation.tasklist
 
+import app.cash.turbine.test
 import com.example.taskprioritylist.domain.model.Task
 import com.example.taskprioritylist.domain.usecase.GetPrioritizedTasksUseCase
 import com.example.taskprioritylist.utils.MainDispatcherExtension
 import io.mockk.every
 import io.mockk.mockk
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
@@ -62,6 +64,22 @@ class TaskListViewModelTest {
 
             val success = viewModel.uiState.value as TaskListUiState.Success
             assertEquals("Both", success.tasks.first().title)
+        }
+
+    @Test
+    fun `GIVEN use case emits tasks then empty list WHEN collecting THEN uiState transitions from Success to Empty`() =
+        runTest {
+            val taskSource = MutableStateFlow(listOf(aTask(id = 1L, title = "Alpha")))
+            every { useCase() } returns taskSource
+
+            val viewModel = TaskListViewModel(useCase)
+
+            viewModel.uiState.test {
+                assertEquals(TaskListUiState.Success(listOf(aTask(id = 1L, title = "Alpha"))), awaitItem())
+                taskSource.value = emptyList()
+                assertEquals(TaskListUiState.Empty, awaitItem())
+                cancelAndIgnoreRemainingEvents()
+            }
         }
 
     @Test

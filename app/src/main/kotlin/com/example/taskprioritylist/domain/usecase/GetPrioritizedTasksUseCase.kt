@@ -19,18 +19,18 @@ class GetPrioritizedTasksUseCase @Inject constructor(
             )
         }
 
-    private fun priorityTier(task: Task): Int =
+    private fun priorityTier(task: Task): PriorityLevel =
         when {
-            task.isImportant && task.isUrgent -> TIER_IMPORTANT_AND_URGENT
-            task.isImportant -> TIER_IMPORTANT_ONLY
-            task.isUrgent -> TIER_URGENT_ONLY
-            else -> TIER_NONE
+            task.isImportant && task.isUrgent -> PriorityLevel.IMPORTANT_AND_URGENT
+            task.isImportant -> PriorityLevel.IMPORTANT_ONLY
+            task.isUrgent -> PriorityLevel.URGENT_ONLY
+            else -> PriorityLevel.NONE
         }
 
-    companion object {
-        private const val TIER_IMPORTANT_AND_URGENT = 0
-        private const val TIER_IMPORTANT_ONLY = 1
-        private const val TIER_URGENT_ONLY = 2
-        private const val TIER_NONE = 3
+    private enum class PriorityLevel {
+        IMPORTANT_AND_URGENT,
+        IMPORTANT_ONLY,
+        URGENT_ONLY,
+        NONE,
     }
 }

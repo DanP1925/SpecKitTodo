@@ -13,12 +13,13 @@
 bin/
 gen/
 out/
-release/
 
 # Gradle files
 .gradle/
 build/
-app/build/
+
+# Kotlin build cache
+.kotlin/
 
 # Local configuration file (sdk path, etc)
 local.properties
@@ -43,7 +44,13 @@ captures/
 .idea/
 *.ipr
 *.iws
+
+# macOS
 .DS_Store
+**/.DS_Store
+
+# Windows
+Thumbs.db
 
 # Keystore files
 *.jks
@@ -56,24 +63,11 @@ captures/
 # Google Services (e.g. APIs or Firebase)
 google-services.json
 
-# Fastlane
-fastlane/report.xml
-fastlane/Preview.html
-fastlane/screenshots
-fastlane/test_output
-fastlane/readme.md
-
-# Version control
-vcs.xml
-
 # lint
 lint/intermediates/
 lint/generated/
 lint/outputs/
 lint/tmp/
-
-# CMake
-.externalNativeBuild/
 
 # Test results
 test-results/

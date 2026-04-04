@@ -34,14 +34,17 @@ class TaskListRobot(private val rule: ComposeContentTestRule) {
         firstTitle: String,
         secondTitle: String,
     ) {
-        val firstNode = rule.onNodeWithTag(TaskListTestTags.taskItem(firstTitle))
-        val secondNode = rule.onNodeWithTag(TaskListTestTags.taskItem(secondTitle))
-        firstNode.assertIsDisplayed()
-        secondNode.assertIsDisplayed()
-        rule.onAllNodes(
-            androidx.compose.ui.test.hasTestTag(TaskListTestTags.taskItem(firstTitle))
-                .or(androidx.compose.ui.test.hasTestTag(TaskListTestTags.taskItem(secondTitle))),
-        )[0].assertIsDisplayed()
+        rule.onNodeWithTag(TaskListTestTags.taskItem(firstTitle)).assertIsDisplayed()
+        rule.onNodeWithTag(TaskListTestTags.taskItem(secondTitle)).assertIsDisplayed()
+        val firstY =
+            rule.onNodeWithTag(TaskListTestTags.taskItem(firstTitle))
+                .fetchSemanticsNode().positionInRoot.y
+        val secondY =
+            rule.onNodeWithTag(TaskListTestTags.taskItem(secondTitle))
+                .fetchSemanticsNode().positionInRoot.y
+        assert(firstY < secondY) {
+            "Expected '$firstTitle' (y=$firstY) to appear above '$secondTitle' (y=$secondY)"
+        }
     }
 
     fun assertErrorMessageIsDisplayed(message: String) {

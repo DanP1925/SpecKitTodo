@@ -34,6 +34,7 @@ abstract class DatabaseModule {
             ).build()
 
         @Provides
+        @Singleton
         fun provideTaskDao(database: TaskDatabase): TaskDao = database.taskDao()
     }
 }
