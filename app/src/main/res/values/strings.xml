@@ -2,7 +2,6 @@
 <resources>
     <string name="app_name">Task Priority List</string>
     <string name="empty_state_message">No tasks yet. Add your first task!</string>
-    <string name="content_description_task_list">Prioritized task list</string>
     <string name="error_loading_tasks">Something went wrong. Please restart the app.</string>
     <string name="priority_important_and_urgent">Important and Urgent</string>
     <string name="priority_important">Important</string>

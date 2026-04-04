@@ -4,8 +4,7 @@ import com.example.taskprioritylist.domain.model.Task
 import com.example.taskprioritylist.domain.repository.TaskRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -13,24 +12,15 @@ import javax.inject.Singleton
 class FakeTaskRepository
     @Inject
     constructor() : TaskRepository {
-        private val taskFlow = MutableStateFlow<List<Task>>(emptyList())
-        private var errorToThrow: Throwable? = null
+        private val resultFlow = MutableStateFlow<Result<List<Task>>>(Result.success(emptyList()))
 
         fun emit(tasks: List<Task>) {
-            errorToThrow = null
-            taskFlow.value = tasks
+            resultFlow.value = Result.success(tasks)
         }
 
         fun setError(throwable: Throwable) {
-            errorToThrow = throwable
+            resultFlow.value = Result.failure(throwable)
         }
 
-        override fun getTasks(): Flow<List<Task>> {
-            val error = errorToThrow
-            return if (error != null) {
-                flow { throw error }
-            } else {
-                taskFlow.asStateFlow()
-            }
-        }
+        override fun getTasks(): Flow<List<Task>> = resultFlow.map { it.getOrThrow() }
     }
