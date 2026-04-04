@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Task Priority List</string>
+    <string name="empty_state_message">No tasks yet. Add your first task!</string>
+    <string name="label_important">Important</string>
+    <string name="label_urgent">Urgent</string>
+    <string name="content_description_task_list">Prioritized task list</string>
+</resources>
