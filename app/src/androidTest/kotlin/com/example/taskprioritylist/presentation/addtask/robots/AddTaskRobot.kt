@@ -44,7 +44,7 @@ class AddTaskRobot(private val rule: ComposeContentTestRule) {
     }
 
     fun assertTitleError() {
-        rule.onNodeWithTag(AddTaskTestTags.TITLE_ERROR).assertIsDisplayed()
+        rule.onNodeWithTag(AddTaskTestTags.TITLE_ERROR, useUnmergedTree = true).assertIsDisplayed()
     }
 
     fun assertDiscardDialogVisible() {

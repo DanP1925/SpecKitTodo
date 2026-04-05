@@ -96,7 +96,7 @@ All source paths are relative to the repository root.
 
 - [x] T025 [P] Run `./gradlew ktlintCheck` and fix all violations across all new and modified source files
 - [x] T026 Run `./gradlew test` — verify all JUnit 5 unit tests pass (AddTaskUseCaseTest, AddTaskViewModelTest, TaskRepositoryImplTest including new insert cases)
-- [ ] T027 Run `./gradlew connectedAndroidTest` — verify all Compose UI tests pass (AddTaskScreenTest, TaskListScreenTest including FAB test)
+- [x] T027 Run `./gradlew connectedAndroidTest` — verify all Compose UI tests pass (AddTaskScreenTest, TaskListScreenTest including FAB test)
 
 ---
 
