@@ -45,13 +45,13 @@ All source paths are relative to the repository root.
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete.
 
-- [ ] T004 [P] Update `app/src/main/kotlin/com/example/taskprioritylist/data/local/TaskDao.kt` — add `@Insert(onConflict = OnConflictStrategy.ABORT) suspend fun insertTask(entity: TaskEntity)`
-- [ ] T005 [P] Update `app/src/main/kotlin/com/example/taskprioritylist/domain/repository/TaskRepository.kt` — add `suspend fun addTask(task: Task)`
-- [ ] T006 Update `app/src/main/kotlin/com/example/taskprioritylist/data/repository/TaskRepositoryImpl.kt` — implement `override suspend fun addTask(task: Task) { taskDao.insertTask(task.toEntity()) }` (depends on T004, T005)
-- [ ] T007 [P] Create `app/src/main/kotlin/com/example/taskprioritylist/presentation/addtask/AddTaskUiState.kt` — `data class AddTaskUiState(val title: String = "", val description: String = "", val isImportant: Boolean = false, val isUrgent: Boolean = false, val titleError: String? = null, val isDirty: Boolean = false)`
-- [ ] T008 [P] Create `app/src/main/kotlin/com/example/taskprioritylist/presentation/addtask/AddTaskEvent.kt` — `sealed interface AddTaskEvent { data object NavigateBack : AddTaskEvent }`
-- [ ] T009 [P] Create `app/src/main/kotlin/com/example/taskprioritylist/presentation/navigation/AppDestinations.kt` — `@Serializable data object TaskList` and `@Serializable data object AddTask`
-- [ ] T010 Update `app/src/androidTest/kotlin/com/example/taskprioritylist/fake/FakeTaskRepository.kt` — add `override suspend fun addTask(task: Task) { }` stub (and any error-injection variant needed by tests) (depends on T005)
+- [x] T004 [P] Update `app/src/main/kotlin/com/example/taskprioritylist/data/local/TaskDao.kt` — add `@Insert(onConflict = OnConflictStrategy.ABORT) suspend fun insertTask(entity: TaskEntity)`
+- [x] T005 [P] Update `app/src/main/kotlin/com/example/taskprioritylist/domain/repository/TaskRepository.kt` — add `suspend fun addTask(task: Task)`
+- [x] T006 Update `app/src/main/kotlin/com/example/taskprioritylist/data/repository/TaskRepositoryImpl.kt` — implement `override suspend fun addTask(task: Task) { taskDao.insertTask(task.toEntity()) }` (depends on T004, T005)
+- [x] T007 [P] Create `app/src/main/kotlin/com/example/taskprioritylist/presentation/addtask/AddTaskUiState.kt` — `data class AddTaskUiState(val title: String = "", val description: String = "", val isImportant: Boolean = false, val isUrgent: Boolean = false, val titleError: String? = null, val isDirty: Boolean = false)`
+- [x] T008 [P] Create `app/src/main/kotlin/com/example/taskprioritylist/presentation/addtask/AddTaskEvent.kt` — `sealed interface AddTaskEvent { data object NavigateBack : AddTaskEvent }`
+- [x] T009 [P] Create `app/src/main/kotlin/com/example/taskprioritylist/presentation/navigation/AppDestinations.kt` — `@Serializable data object TaskList` and `@Serializable data object AddTask`
+- [x] T010 Update `app/src/androidTest/kotlin/com/example/taskprioritylist/fake/FakeTaskRepository.kt` — add `override suspend fun addTask(task: Task) { }` stub (and any error-injection variant needed by tests) (depends on T005)
 
 **Checkpoint**: Foundation ready — User Story 1 implementation can now begin.
 
