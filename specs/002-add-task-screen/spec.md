@@ -2,7 +2,7 @@
 
 **Feature Branch**: `002-add-task-screen`
 **Created**: 2026-04-05
-**Status**: Draft
+**Status**: Ready for Implementation
 **Input**: User description: "Add a different screen so users can add new tasks"
 
 ## User Scenarios & Testing *(mandatory)*
@@ -48,6 +48,7 @@ correct priority tier.
 - What if the title is only whitespace? Treat as empty — show validation error, do not save.
 - What if the user navigates back via the system back gesture with unsaved input? Treated the same as tapping Cancel — show the "Discard changes?" confirmation dialog.
 - What if a task with the same title already exists? Duplicate titles are allowed — save without error.
+- What does "field modified" mean for the discard dialog trigger (`isDirty`)? `isDirty` is one-way: set to `true` the moment any field value changes for the first time, and never reset to `false` during the session. Toggling Important on and then back off still counts as dirty.
 
 ## Requirements *(mandatory)*
 
@@ -103,8 +104,8 @@ correct priority tier.
 
 ## Assumptions
 
-- Navigation uses Jetpack Navigation for Compose (`navigation-compose`) added to the
-  existing dependency catalog.
+- Navigation uses Jetpack Navigation 3 (`androidx.navigation3:navigation3-runtime` +
+  `navigation3-ui` 1.0.1) added to the existing dependency catalog.
 - No editing of existing tasks is in scope — this feature covers creation only.
 - The Add Task screen is modal-style (full screen), not a bottom sheet or dialog.
 - `createdAt` is set automatically to `System.currentTimeMillis()` at save time; the

@@ -67,7 +67,7 @@ app/
 │   │   │   │   │   ├── TaskListViewModel.kt             # unchanged
 │   │   │   │   │   ├── TaskListUiState.kt               # unchanged
 │   │   │   │   │   ├── TaskListSemantics.kt             # unchanged
-│   │   │   │   │   └── TaskListTestTags.kt              # unchanged
+│   │   │   │   │   └── TaskListTestTags.kt              # updated: add FAB test tag constant
 │   │   │   │   ├── addtask/
 │   │   │   │   │   ├── AddTaskScreen.kt                 # NEW: form composable
 │   │   │   │   │   ├── AddTaskViewModel.kt              # NEW: @HiltViewModel
