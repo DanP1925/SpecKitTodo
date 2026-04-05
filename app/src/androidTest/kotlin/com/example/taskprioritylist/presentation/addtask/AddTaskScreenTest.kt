@@ -137,18 +137,4 @@ class AddTaskScreenTest {
 
         taskListRobot.assertTaskIsDisplayed("Task 20")
     }
-
-    private fun aTask(
-        id: Long,
-        title: String,
-        isImportant: Boolean = false,
-        isUrgent: Boolean = false,
-    ) = Task(
-        id = id,
-        title = title,
-        description = null,
-        isImportant = isImportant,
-        isUrgent = isUrgent,
-        createdAt = 0L,
-    )
 }

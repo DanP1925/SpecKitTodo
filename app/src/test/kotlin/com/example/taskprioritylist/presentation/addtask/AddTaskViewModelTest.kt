@@ -2,6 +2,7 @@ package com.example.taskprioritylist.presentation.addtask
 
 import app.cash.turbine.test
 import com.example.taskprioritylist.domain.usecase.AddTaskUseCase
+import com.example.taskprioritylist.presentation.addtask.AddTaskViewModel.Companion.MAX_DESCRIPTION_LENGTH
 import com.example.taskprioritylist.utils.MainDispatcherExtension
 import io.mockk.coJustRun
 import io.mockk.coVerify
@@ -53,6 +54,28 @@ class AddTaskViewModelTest {
 
             assertEquals("Some notes", sut.uiState.value.description)
             assertTrue(sut.uiState.value.isDirty)
+        }
+
+    @Test
+    fun `GIVEN description at exactly max length WHEN onDescriptionChanged THEN description is updated`() =
+        runTest {
+            val sut = AddTaskViewModel(addTaskUseCase)
+            val description = "a".repeat(MAX_DESCRIPTION_LENGTH)
+
+            sut.onDescriptionChanged(description)
+
+            assertEquals(description, sut.uiState.value.description)
+        }
+
+    @Test
+    fun `GIVEN description exceeds max length WHEN onDescriptionChanged THEN description is not updated`() =
+        runTest {
+            val sut = AddTaskViewModel(addTaskUseCase)
+            sut.onDescriptionChanged("a".repeat(MAX_DESCRIPTION_LENGTH))
+
+            sut.onDescriptionChanged("a".repeat(MAX_DESCRIPTION_LENGTH + 1))
+
+            assertEquals("a".repeat(MAX_DESCRIPTION_LENGTH), sut.uiState.value.description)
         }
 
     @Test

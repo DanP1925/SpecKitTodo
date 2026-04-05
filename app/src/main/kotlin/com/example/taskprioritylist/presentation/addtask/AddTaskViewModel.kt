@@ -18,6 +18,10 @@ import javax.inject.Inject
 class AddTaskViewModel @Inject constructor(
     private val addTaskUseCase: AddTaskUseCase,
 ) : ViewModel() {
+    companion object {
+        const val MAX_DESCRIPTION_LENGTH = 140
+    }
+
     private val _uiState = MutableStateFlow(AddTaskUiState())
     val uiState: StateFlow<AddTaskUiState> = _uiState.asStateFlow()
 
@@ -29,6 +33,7 @@ class AddTaskViewModel @Inject constructor(
     }
 
     fun onDescriptionChanged(description: String) {
+        if (description.length > MAX_DESCRIPTION_LENGTH) return
         _uiState.update { it.copy(description = description, isDirty = true) }
     }
 
