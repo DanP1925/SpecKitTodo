@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.hilt)
     alias(libs.plugins.android.junit5)
     alias(libs.plugins.ktlint)
+    alias(libs.plugins.kotlinx.serialization)
 }
 
 android {
@@ -63,6 +64,9 @@ dependencies {
     ksp(libs.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
     implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.navigation3.runtime)
+    implementation(libs.navigation3.ui)
+    implementation(libs.kotlinx.serialization.json)
 
     // Unit tests (JUnit 5)
     testImplementation(libs.junit5.api)

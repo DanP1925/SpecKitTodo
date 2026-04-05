@@ -33,9 +33,9 @@ All source paths are relative to the repository root.
 
 **Purpose**: Build configuration changes required before any code can compile.
 
-- [ ] T001 Update `gradle/libs.versions.toml` — add `navigation3 = "1.0.1"` and `kotlinxSerialization = "1.8.0"` under `[versions]`; add `navigation3-runtime`, `navigation3-ui`, `kotlinx-serialization-json` library aliases under `[libraries]`; add `kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }` under `[plugins]`
-- [ ] T002 Update `app/build.gradle.kts` — apply `alias(libs.plugins.kotlinx.serialization)` in the plugins block; add `implementation(libs.navigation3.runtime)`, `implementation(libs.navigation3.ui)`, `implementation(libs.kotlinx.serialization.json)` in dependencies (depends on T001)
-- [ ] T003 [P] Create package directory trees under main source: `presentation/navigation/`, `presentation/addtask/`; under unit tests: `presentation/addtask/`; under UI tests: `presentation/addtask/robots/`
+- [x] T001 Update `gradle/libs.versions.toml` — add `navigation3 = "1.0.1"` and `kotlinxSerialization = "1.8.0"` under `[versions]`; add `navigation3-runtime`, `navigation3-ui`, `kotlinx-serialization-json` library aliases under `[libraries]`; add `kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }` under `[plugins]`
+- [x] T002 Update `app/build.gradle.kts` — apply `alias(libs.plugins.kotlinx.serialization)` in the plugins block; add `implementation(libs.navigation3.runtime)`, `implementation(libs.navigation3.ui)`, `implementation(libs.kotlinx.serialization.json)` in dependencies (depends on T001)
+- [x] T003 [P] Create package directory trees under main source: `presentation/navigation/`, `presentation/addtask/`; under unit tests: `presentation/addtask/`; under UI tests: `presentation/addtask/robots/`
 
 ---
 
