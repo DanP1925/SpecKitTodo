@@ -7,4 +7,15 @@
     <string name="priority_important">Important</string>
     <string name="priority_urgent">Urgent</string>
     <string name="priority_none">No priority</string>
+    <string name="add_task_title">Add Task</string>
+    <string name="title_label">Title</string>
+    <string name="description_label">Description (optional)</string>
+    <string name="important_label">Important</string>
+    <string name="urgent_label">Urgent</string>
+    <string name="save_button">Save</string>
+    <string name="cancel_button">Cancel</string>
+    <string name="discard_changes_title">Discard changes?</string>
+    <string name="discard_changes_message">You have unsaved changes. Do you want to discard them?</string>
+    <string name="discard_button">Discard</string>
+    <string name="keep_editing_button">Keep editing</string>
 </resources>

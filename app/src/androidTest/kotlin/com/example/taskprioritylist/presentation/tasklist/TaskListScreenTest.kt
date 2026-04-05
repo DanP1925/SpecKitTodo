@@ -79,6 +79,14 @@ class TaskListScreenTest {
     }
 
     @Test
+    fun when_task_list_screen_is_displayed_then_fab_is_visible() {
+        fakeRepository.emit(emptyList())
+        composeRule.waitForIdle()
+
+        robot.assertFabVisible()
+    }
+
+    @Test
     fun given_important_task_and_non_important_task_when_screen_is_displayed_then_important_task_appears_first() {
         fakeRepository.emit(
             listOf(

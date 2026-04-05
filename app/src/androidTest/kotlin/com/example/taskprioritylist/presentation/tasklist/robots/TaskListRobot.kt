@@ -6,6 +6,8 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollToIndex
 import com.example.taskprioritylist.presentation.tasklist.PriorityTierKey
 import com.example.taskprioritylist.presentation.tasklist.TaskListTestTags
 
@@ -49,5 +51,17 @@ class TaskListRobot(private val rule: ComposeContentTestRule) {
 
     fun assertErrorMessageIsDisplayed(message: String) {
         rule.onNodeWithText(message).assertIsDisplayed()
+    }
+
+    fun assertFabVisible() {
+        rule.onNodeWithTag(TaskListTestTags.FAB).assertIsDisplayed()
+    }
+
+    fun tapFab() {
+        rule.onNodeWithTag(TaskListTestTags.FAB).performClick()
+    }
+
+    fun scrollToIndex(index: Int) {
+        rule.onNodeWithTag(TaskListTestTags.TASK_LIST).performScrollToIndex(index)
     }
 }
