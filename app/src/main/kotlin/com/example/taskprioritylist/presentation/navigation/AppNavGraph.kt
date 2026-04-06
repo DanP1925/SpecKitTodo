@@ -1,0 +1,39 @@
+package com.example.taskprioritylist.presentation.navigation
+
+import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
+import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.runtime.rememberNavBackStack
+import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
+import androidx.navigation3.ui.NavDisplay
+import com.example.taskprioritylist.presentation.addtask.AddTaskScreen
+import com.example.taskprioritylist.presentation.tasklist.TaskListScreen
+
+@Composable
+fun AppNavGraph() {
+    val backStack = rememberNavBackStack(TaskList)
+
+    NavDisplay(
+        backStack = backStack,
+        onBack = { backStack.removeLastOrNull() },
+        entryDecorators =
+            listOf(
+                rememberSaveableStateHolderNavEntryDecorator(),
+                rememberViewModelStoreNavEntryDecorator(),
+            ),
+        entryProvider =
+            entryProvider {
+                entry<TaskList> {
+                    TaskListScreen(
+                        // Guard: prevent pushing duplicate AddTask entries if the FAB is double-tapped
+                        onAddTask = { if (backStack.lastOrNull() !is AddTask) backStack.add(AddTask) },
+                    )
+                }
+                entry<AddTask> {
+                    AddTaskScreen(
+                        onNavigateBack = { backStack.removeLastOrNull() },
+                    )
+                }
+            },
+    )
+}

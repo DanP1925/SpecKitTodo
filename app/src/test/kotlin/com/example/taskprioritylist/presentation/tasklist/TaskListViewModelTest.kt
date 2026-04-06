@@ -29,9 +29,9 @@ class TaskListViewModelTest {
         runTest {
             every { useCase() } returns flowOf(emptyList())
 
-            val viewModel = TaskListViewModel(useCase)
+            val sut = TaskListViewModel(useCase)
 
-            assertEquals(TaskListUiState.Empty, viewModel.uiState.value)
+            assertEquals(TaskListUiState.Empty, sut.uiState.value)
         }
 
     @Test
@@ -44,10 +44,10 @@ class TaskListViewModelTest {
                 )
             every { useCase() } returns flowOf(tasks)
 
-            val viewModel = TaskListViewModel(useCase)
+            val sut = TaskListViewModel(useCase)
 
-            assertInstanceOf(TaskListUiState.Success::class.java, viewModel.uiState.value)
-            assertEquals(2, (viewModel.uiState.value as TaskListUiState.Success).tasks.size)
+            assertInstanceOf(TaskListUiState.Success::class.java, sut.uiState.value)
+            assertEquals(2, (sut.uiState.value as TaskListUiState.Success).tasks.size)
         }
 
     @Test
@@ -60,9 +60,9 @@ class TaskListViewModelTest {
                 )
             every { useCase() } returns flowOf(tasks)
 
-            val viewModel = TaskListViewModel(useCase)
+            val sut = TaskListViewModel(useCase)
 
-            val success = viewModel.uiState.value as TaskListUiState.Success
+            val success = sut.uiState.value as TaskListUiState.Success
             assertEquals("Both", success.tasks.first().title)
         }
 
@@ -72,9 +72,9 @@ class TaskListViewModelTest {
             val taskSource = MutableStateFlow(listOf(aTask(id = 1L, title = "Alpha")))
             every { useCase() } returns taskSource
 
-            val viewModel = TaskListViewModel(useCase)
+            val sut = TaskListViewModel(useCase)
 
-            viewModel.uiState.test {
+            sut.uiState.test {
                 assertEquals(TaskListUiState.Success(listOf(aTask(id = 1L, title = "Alpha"))), awaitItem())
                 taskSource.value = emptyList()
                 assertEquals(TaskListUiState.Empty, awaitItem())
@@ -87,10 +87,10 @@ class TaskListViewModelTest {
         runTest {
             every { useCase() } returns flow { throw RuntimeException("DB error") }
 
-            val viewModel = TaskListViewModel(useCase)
+            val sut = TaskListViewModel(useCase)
 
-            assertInstanceOf(TaskListUiState.Error::class.java, viewModel.uiState.value)
-            assertEquals("DB error", (viewModel.uiState.value as TaskListUiState.Error).message)
+            assertInstanceOf(TaskListUiState.Error::class.java, sut.uiState.value)
+            assertEquals("DB error", (sut.uiState.value as TaskListUiState.Error).message)
         }
 
     private fun aTask(

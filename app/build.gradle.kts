@@ -6,11 +6,12 @@ plugins {
     alias(libs.plugins.hilt)
     alias(libs.plugins.android.junit5)
     alias(libs.plugins.ktlint)
+    alias(libs.plugins.kotlinx.serialization)
 }
 
 android {
     namespace = "com.example.taskprioritylist"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.example.taskprioritylist"
@@ -63,6 +64,10 @@ dependencies {
     ksp(libs.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
     implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.navigation3.runtime)
+    implementation(libs.navigation3.ui)
+    implementation(libs.lifecycle.viewmodel.navigation3)
+    implementation(libs.kotlinx.serialization.json)
 
     // Unit tests (JUnit 5)
     testImplementation(libs.junit5.api)
