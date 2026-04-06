@@ -32,6 +32,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -68,15 +69,45 @@ fun AddTaskScreen(
         viewModel.onDiscardRequested()
     }
 
+    AddTaskScreenContent(
+        uiState = uiState,
+        onNavigateBack = currentOnNavigateBack,
+        onTitleChanged = viewModel::onTitleChanged,
+        onDescriptionChanged = viewModel::onDescriptionChanged,
+        onImportantToggled = viewModel::onImportantToggled,
+        onUrgentToggled = viewModel::onUrgentToggled,
+        onSave = viewModel::onSave,
+        onDiscardRequested = viewModel::onDiscardRequested,
+        onDiscardConfirmed = viewModel::onDiscardConfirmed,
+        onDiscardDismissed = viewModel::onDiscardDismissed,
+        focusRequester = focusRequester,
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun AddTaskScreenContent(
+    uiState: AddTaskUiState,
+    onNavigateBack: () -> Unit,
+    onTitleChanged: (String) -> Unit,
+    onDescriptionChanged: (String) -> Unit,
+    onImportantToggled: () -> Unit,
+    onUrgentToggled: () -> Unit,
+    onSave: () -> Unit,
+    onDiscardRequested: () -> Unit,
+    onDiscardConfirmed: () -> Unit,
+    onDiscardDismissed: () -> Unit,
+    focusRequester: FocusRequester,
+) {
     if (uiState.showDiscardDialog) {
         AlertDialog(
             modifier = Modifier.testTag(AddTaskTestTags.DISCARD_DIALOG),
-            onDismissRequest = { viewModel.onDiscardDismissed() },
+            onDismissRequest = onDiscardDismissed,
             title = { Text(stringResource(R.string.discard_changes_title)) },
             text = { Text(stringResource(R.string.discard_changes_message)) },
             confirmButton = {
                 TextButton(
-                    onClick = viewModel::onDiscardConfirmed,
+                    onClick = onDiscardConfirmed,
                     modifier = Modifier.testTag(AddTaskTestTags.DISCARD_CONFIRM),
                 ) {
                     Text(stringResource(R.string.discard_button))
@@ -84,7 +115,7 @@ fun AddTaskScreen(
             },
             dismissButton = {
                 TextButton(
-                    onClick = { viewModel.onDiscardDismissed() },
+                    onClick = onDiscardDismissed,
                     modifier = Modifier.testTag(AddTaskTestTags.KEEP_EDITING_BUTTON),
                 ) {
                     Text(stringResource(R.string.keep_editing_button))
@@ -101,9 +132,9 @@ fun AddTaskScreen(
                     IconButton(
                         onClick = {
                             if (uiState.isDirty) {
-                                viewModel.onDiscardRequested()
+                                onDiscardRequested()
                             } else {
-                                currentOnNavigateBack()
+                                onNavigateBack()
                             }
                         },
                         modifier = Modifier.testTag(AddTaskTestTags.CANCEL_BUTTON),
@@ -132,7 +163,7 @@ fun AddTaskScreen(
                 }
             OutlinedTextField(
                 value = uiState.title,
-                onValueChange = viewModel::onTitleChanged,
+                onValueChange = onTitleChanged,
                 label = { Text(stringResource(R.string.title_label)) },
                 isError = uiState.titleError != null,
                 supportingText =
@@ -155,7 +186,7 @@ fun AddTaskScreen(
 
             OutlinedTextField(
                 value = uiState.description,
-                onValueChange = viewModel::onDescriptionChanged,
+                onValueChange = onDescriptionChanged,
                 label = { Text(stringResource(R.string.description_label)) },
                 modifier =
                     Modifier
@@ -172,7 +203,7 @@ fun AddTaskScreen(
                 Text(stringResource(R.string.important_label))
                 Switch(
                     checked = uiState.isImportant,
-                    onCheckedChange = { viewModel.onImportantToggled() },
+                    onCheckedChange = { onImportantToggled() },
                     modifier = Modifier.testTag(AddTaskTestTags.IMPORTANT_TOGGLE),
                 )
             }
@@ -185,13 +216,13 @@ fun AddTaskScreen(
                 Text(stringResource(R.string.urgent_label))
                 Switch(
                     checked = uiState.isUrgent,
-                    onCheckedChange = { viewModel.onUrgentToggled() },
+                    onCheckedChange = { onUrgentToggled() },
                     modifier = Modifier.testTag(AddTaskTestTags.URGENT_TOGGLE),
                 )
             }
 
             Button(
-                onClick = viewModel::onSave,
+                onClick = onSave,
                 enabled = !uiState.isSaving,
                 modifier =
                     Modifier
@@ -202,4 +233,22 @@ fun AddTaskScreen(
             }
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun AddTaskScreenPreview() {
+    AddTaskScreenContent(
+        uiState = AddTaskUiState(),
+        onNavigateBack = {},
+        onTitleChanged = {},
+        onDescriptionChanged = {},
+        onImportantToggled = {},
+        onUrgentToggled = {},
+        onSave = {},
+        onDiscardRequested = {},
+        onDiscardConfirmed = {},
+        onDiscardDismissed = {},
+        focusRequester = remember { FocusRequester() },
+    )
 }
