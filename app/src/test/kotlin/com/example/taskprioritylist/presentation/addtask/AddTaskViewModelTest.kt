@@ -154,7 +154,7 @@ class AddTaskViewModelTest {
         }
 
     @Test
-    fun `GIVEN valid title WHEN onSave THEN use case is called and shouldNavigateBack is true`() =
+    fun `GIVEN valid title WHEN onSave THEN use case is called and shouldNavigateBack is true and isSaving is false`() =
         runTest {
             coJustRun { addTaskUseCase(any(), any(), any(), any()) }
             val sut = AddTaskViewModel(addTaskUseCase)
@@ -163,6 +163,7 @@ class AddTaskViewModelTest {
             sut.onSave()
 
             assertTrue(sut.uiState.value.shouldNavigateBack)
+            assertFalse(sut.uiState.value.isSaving)
             coVerify(exactly = 1) { addTaskUseCase("Buy milk", any(), false, false) }
         }
 

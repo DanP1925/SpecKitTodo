@@ -15,7 +15,7 @@ class AddTaskUseCase @Inject constructor(
     ) {
         repository.addTask(
             Task(
-                id = 0,
+                id = 0L,
                 title = title.trim(),
                 description = description.trim().ifBlank { null },
                 isImportant = isImportant,

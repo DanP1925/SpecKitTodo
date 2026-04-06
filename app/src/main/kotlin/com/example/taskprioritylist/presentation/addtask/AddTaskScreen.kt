@@ -50,7 +50,7 @@ fun AddTaskScreen(
 
     val lifecycle = LocalLifecycleOwner.current.lifecycle
     val currentOnNavigateBack by rememberUpdatedState(onNavigateBack)
-    LaunchedEffect(viewModel, lifecycle) {
+    LaunchedEffect(lifecycle) {
         viewModel.uiState
             .filter { it.shouldNavigateBack }
             .flowWithLifecycle(lifecycle)

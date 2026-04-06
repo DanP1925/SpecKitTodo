@@ -55,7 +55,7 @@ class AddTaskViewModel @Inject constructor(
                     isUrgent = state.isUrgent,
                 )
             }.onSuccess {
-                _uiState.update { it.copy(shouldNavigateBack = true) }
+                _uiState.update { it.copy(isSaving = false, shouldNavigateBack = true) }
             }.onFailure {
                 _uiState.update { it.copy(isSaving = false) }
             }
