@@ -1,6 +1,5 @@
 package com.example.taskprioritylist.presentation.addtask
 
-import app.cash.turbine.test
 import com.example.taskprioritylist.domain.usecase.AddTaskUseCase
 import com.example.taskprioritylist.presentation.addtask.AddTaskViewModel.Companion.MAX_DESCRIPTION_LENGTH
 import com.example.taskprioritylist.utils.MainDispatcherExtension
@@ -9,6 +8,7 @@ import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
@@ -90,6 +90,17 @@ class AddTaskViewModelTest {
         }
 
     @Test
+    fun `WHEN onImportantToggled twice THEN isImportant returns to false`() =
+        runTest {
+            val sut = AddTaskViewModel(addTaskUseCase)
+
+            sut.onImportantToggled()
+            sut.onImportantToggled()
+
+            assertFalse(sut.uiState.value.isImportant)
+        }
+
+    @Test
     fun `WHEN onUrgentToggled THEN isUrgent flips to true and isDirty becomes true`() =
         runTest {
             val sut = AddTaskViewModel(addTaskUseCase)
@@ -101,24 +112,35 @@ class AddTaskViewModelTest {
         }
 
     @Test
-    fun `GIVEN blank title WHEN onSave THEN titleError is set`() =
+    fun `WHEN onUrgentToggled twice THEN isUrgent returns to false`() =
+        runTest {
+            val sut = AddTaskViewModel(addTaskUseCase)
+
+            sut.onUrgentToggled()
+            sut.onUrgentToggled()
+
+            assertFalse(sut.uiState.value.isUrgent)
+        }
+
+    @Test
+    fun `GIVEN blank title WHEN onSave THEN titleError is BLANK`() =
         runTest {
             val sut = AddTaskViewModel(addTaskUseCase)
 
             sut.onSave()
 
-            assertTrue(sut.uiState.value.titleError != null)
+            assertEquals(TitleValidationError.BLANK, sut.uiState.value.titleError)
         }
 
     @Test
-    fun `GIVEN whitespace-only title WHEN onSave THEN titleError is set`() =
+    fun `GIVEN whitespace-only title WHEN onSave THEN titleError is BLANK`() =
         runTest {
             val sut = AddTaskViewModel(addTaskUseCase)
             sut.onTitleChanged("   ")
 
             sut.onSave()
 
-            assertTrue(sut.uiState.value.titleError != null)
+            assertEquals(TitleValidationError.BLANK, sut.uiState.value.titleError)
         }
 
     @Test
@@ -132,18 +154,16 @@ class AddTaskViewModelTest {
         }
 
     @Test
-    fun `GIVEN valid title WHEN onSave THEN use case is called and NavigateBack is emitted`() =
+    fun `GIVEN valid title WHEN onSave THEN use case is called and hasSavedSuccessfully is true`() =
         runTest {
             coJustRun { addTaskUseCase(any(), any(), any(), any()) }
             val sut = AddTaskViewModel(addTaskUseCase)
             sut.onTitleChanged("Buy milk")
 
-            sut.events.test {
-                sut.onSave()
+            sut.onSave()
 
-                assertEquals(AddTaskEvent.NavigateBack, awaitItem())
-            }
-            coVerify(exactly = 1) { addTaskUseCase("Buy milk", "", false, false) }
+            assertTrue(sut.uiState.value.hasSavedSuccessfully)
+            coVerify(exactly = 1) { addTaskUseCase("Buy milk", any(), false, false) }
         }
 
     @Test
@@ -159,15 +179,36 @@ class AddTaskViewModelTest {
         }
 
     @Test
-    fun `WHEN onDiscardConfirmed THEN NavigateBack is emitted without calling use case`() =
+    fun `WHEN onDiscardRequested THEN showDiscardDialog is true`() =
         runTest {
             val sut = AddTaskViewModel(addTaskUseCase)
 
-            sut.events.test {
-                sut.onDiscardConfirmed()
+            sut.onDiscardRequested()
 
-                assertEquals(AddTaskEvent.NavigateBack, awaitItem())
-            }
+            assertTrue(sut.uiState.value.showDiscardDialog)
+        }
+
+    @Test
+    fun `GIVEN dialog shown WHEN onDiscardDismissed THEN showDiscardDialog is false`() =
+        runTest {
+            val sut = AddTaskViewModel(addTaskUseCase)
+            sut.onDiscardRequested()
+
+            sut.onDiscardDismissed()
+
+            assertFalse(sut.uiState.value.showDiscardDialog)
+        }
+
+    @Test
+    fun `WHEN onDiscardConfirmed THEN hasSavedSuccessfully is true and dialog is hidden`() =
+        runTest {
+            val sut = AddTaskViewModel(addTaskUseCase)
+            sut.onDiscardRequested()
+
+            sut.onDiscardConfirmed()
+
+            assertTrue(sut.uiState.value.hasSavedSuccessfully)
+            assertFalse(sut.uiState.value.showDiscardDialog)
             coVerify(exactly = 0) { addTaskUseCase(any(), any(), any(), any()) }
         }
 }

@@ -4,11 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.taskprioritylist.domain.usecase.AddTaskUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -24,9 +21,6 @@ class AddTaskViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(AddTaskUiState())
     val uiState: StateFlow<AddTaskUiState> = _uiState.asStateFlow()
-
-    private val _events = MutableSharedFlow<AddTaskEvent>()
-    val events: SharedFlow<AddTaskEvent> = _events.asSharedFlow()
 
     fun onTitleChanged(title: String) {
         _uiState.update { it.copy(title = title, titleError = null, isDirty = true) }
@@ -47,10 +41,12 @@ class AddTaskViewModel @Inject constructor(
 
     fun onSave() {
         val state = _uiState.value
+        if (state.isSaving) return
         if (state.title.isBlank()) {
-            _uiState.update { it.copy(titleError = "Title cannot be empty") }
+            _uiState.update { it.copy(titleError = TitleValidationError.BLANK) }
             return
         }
+        _uiState.update { it.copy(isSaving = true) }
         viewModelScope.launch {
             addTaskUseCase(
                 title = state.title,
@@ -58,13 +54,19 @@ class AddTaskViewModel @Inject constructor(
                 isImportant = state.isImportant,
                 isUrgent = state.isUrgent,
             )
-            _events.emit(AddTaskEvent.NavigateBack)
+            _uiState.update { it.copy(hasSavedSuccessfully = true) }
         }
     }
 
+    fun onDiscardRequested() {
+        _uiState.update { it.copy(showDiscardDialog = true) }
+    }
+
+    fun onDiscardDismissed() {
+        _uiState.update { it.copy(showDiscardDialog = false) }
+    }
+
     fun onDiscardConfirmed() {
-        viewModelScope.launch {
-            _events.emit(AddTaskEvent.NavigateBack)
-        }
+        _uiState.update { it.copy(showDiscardDialog = false, hasSavedSuccessfully = true) }
     }
 }

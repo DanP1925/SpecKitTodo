@@ -25,7 +25,7 @@ fun AppNavGraph() {
             entryProvider {
                 entry<TaskList> {
                     TaskListScreen(
-                        onAddTask = { backStack.add(AddTask) },
+                        onAddTask = { if (backStack.lastOrNull() !is AddTask) backStack.add(AddTask) },
                     )
                 }
                 entry<AddTask> {

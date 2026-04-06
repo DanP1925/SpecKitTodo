@@ -16,6 +16,7 @@
     <string name="cancel_button">Cancel</string>
     <string name="discard_changes_title">Discard changes?</string>
     <string name="discard_changes_message">You have unsaved changes. Do you want to discard them?</string>
+    <string name="error_title_blank">Title cannot be empty</string>
     <string name="discard_button">Discard</string>
     <string name="keep_editing_button">Keep editing</string>
 </resources>

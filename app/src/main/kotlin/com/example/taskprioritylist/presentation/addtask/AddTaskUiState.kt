@@ -5,6 +5,9 @@ data class AddTaskUiState(
     val description: String = "",
     val isImportant: Boolean = false,
     val isUrgent: Boolean = false,
-    val titleError: String? = null,
+    val titleError: TitleValidationError? = null,
     val isDirty: Boolean = false,
+    val isSaving: Boolean = false,
+    val showDiscardDialog: Boolean = false,
+    val hasSavedSuccessfully: Boolean = false,
 )

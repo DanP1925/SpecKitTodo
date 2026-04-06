@@ -64,4 +64,8 @@ class TaskListRobot(private val rule: ComposeContentTestRule) {
     fun scrollToIndex(index: Int) {
         rule.onNodeWithTag(TaskListTestTags.TASK_LIST).performScrollToIndex(index)
     }
+
+    fun assertTaskDoesNotExist(title: String) {
+        rule.onNodeWithTag(TaskListTestTags.taskItem(title)).assertDoesNotExist()
+    }
 }

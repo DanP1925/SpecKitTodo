@@ -28,7 +28,7 @@ class AddTaskUseCaseTest {
             val slot = slot<Task>()
             coJustRun { repository.addTask(capture(slot)) }
 
-            useCase("  Buy milk  ", null, isImportant = false, isUrgent = false)
+            useCase("  Buy milk  ", "", isImportant = false, isUrgent = false)
 
             assertEquals("Buy milk", slot.captured.title)
         }
@@ -61,7 +61,7 @@ class AddTaskUseCaseTest {
             val slot = slot<Task>()
             coJustRun { repository.addTask(capture(slot)) }
 
-            useCase("Title", null, isImportant = true, isUrgent = false)
+            useCase("Title", "", isImportant = true, isUrgent = false)
 
             assertEquals(true, slot.captured.isImportant)
             assertEquals(false, slot.captured.isUrgent)
@@ -73,7 +73,7 @@ class AddTaskUseCaseTest {
             val slot = slot<Task>()
             coJustRun { repository.addTask(capture(slot)) }
 
-            useCase("Title", null, isImportant = false, isUrgent = false)
+            useCase("Title", "", isImportant = false, isUrgent = false)
 
             assertNotEquals(0L, slot.captured.createdAt)
         }
@@ -84,7 +84,7 @@ class AddTaskUseCaseTest {
             val slot = slot<Task>()
             coJustRun { repository.addTask(capture(slot)) }
 
-            useCase("Title", null, isImportant = false, isUrgent = false)
+            useCase("Title", "", isImportant = false, isUrgent = false)
 
             assertEquals(0L, slot.captured.id)
         }
@@ -94,7 +94,7 @@ class AddTaskUseCaseTest {
         runTest {
             coJustRun { repository.addTask(any()) }
 
-            useCase("Title", null, isImportant = false, isUrgent = false)
+            useCase("Title", "", isImportant = false, isUrgent = false)
 
             coVerify(exactly = 1) { repository.addTask(any()) }
         }

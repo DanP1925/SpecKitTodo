@@ -24,9 +24,9 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -35,8 +35,11 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.flowWithLifecycle
 import com.example.taskprioritylist.R
+import kotlinx.coroutines.flow.filter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -45,32 +48,36 @@ fun AddTaskScreen(
     viewModel: AddTaskViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    var showDiscardDialog by remember { mutableStateOf(false) }
 
-    LaunchedEffect(Unit) {
-        viewModel.events.collect { event ->
-            when (event) {
-                AddTaskEvent.NavigateBack -> onNavigateBack()
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    val currentOnNavigateBack by rememberUpdatedState(onNavigateBack)
+    LaunchedEffect(viewModel, lifecycle) {
+        snapshotFlow { uiState }
+            .filter { it.hasSavedSuccessfully }
+            .flowWithLifecycle(lifecycle)
+            .collect {
+                currentOnNavigateBack()
             }
-        }
+    }
+
+    val focusRequester = remember { FocusRequester() }
+    LaunchedEffect(Unit) {
+        focusRequester.requestFocus()
     }
 
     BackHandler(enabled = uiState.isDirty) {
-        showDiscardDialog = true
+        viewModel.onDiscardRequested()
     }
 
-    if (showDiscardDialog) {
+    if (uiState.showDiscardDialog) {
         AlertDialog(
             modifier = Modifier.testTag(AddTaskTestTags.DISCARD_DIALOG),
-            onDismissRequest = { showDiscardDialog = false },
+            onDismissRequest = { viewModel.onDiscardDismissed() },
             title = { Text(stringResource(R.string.discard_changes_title)) },
             text = { Text(stringResource(R.string.discard_changes_message)) },
             confirmButton = {
                 TextButton(
-                    onClick = {
-                        showDiscardDialog = false
-                        viewModel.onDiscardConfirmed()
-                    },
+                    onClick = viewModel::onDiscardConfirmed,
                     modifier = Modifier.testTag(AddTaskTestTags.DISCARD_CONFIRM),
                 ) {
                     Text(stringResource(R.string.discard_button))
@@ -78,18 +85,13 @@ fun AddTaskScreen(
             },
             dismissButton = {
                 TextButton(
-                    onClick = { showDiscardDialog = false },
+                    onClick = { viewModel.onDiscardDismissed() },
                     modifier = Modifier.testTag(AddTaskTestTags.KEEP_EDITING_BUTTON),
                 ) {
                     Text(stringResource(R.string.keep_editing_button))
                 }
             },
         )
-    }
-
-    val focusRequester = remember { FocusRequester() }
-    LaunchedEffect(Unit) {
-        focusRequester.requestFocus()
     }
 
     Scaffold(
@@ -100,7 +102,7 @@ fun AddTaskScreen(
                     IconButton(
                         onClick = {
                             if (uiState.isDirty) {
-                                showDiscardDialog = true
+                                viewModel.onDiscardRequested()
                             } else {
                                 onNavigateBack()
                             }
@@ -124,16 +126,21 @@ fun AddTaskScreen(
                     .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
+            val titleErrorText =
+                when (uiState.titleError) {
+                    TitleValidationError.BLANK -> stringResource(R.string.error_title_blank)
+                    null -> null
+                }
             OutlinedTextField(
                 value = uiState.title,
                 onValueChange = viewModel::onTitleChanged,
                 label = { Text(stringResource(R.string.title_label)) },
                 isError = uiState.titleError != null,
                 supportingText =
-                    if (uiState.titleError != null) {
+                    if (titleErrorText != null) {
                         {
                             Text(
-                                text = uiState.titleError!!,
+                                text = titleErrorText,
                                 modifier = Modifier.testTag(AddTaskTestTags.TITLE_ERROR),
                             )
                         }
@@ -186,6 +193,7 @@ fun AddTaskScreen(
 
             Button(
                 onClick = viewModel::onSave,
+                enabled = !uiState.isSaving,
                 modifier =
                     Modifier
                         .fillMaxWidth()

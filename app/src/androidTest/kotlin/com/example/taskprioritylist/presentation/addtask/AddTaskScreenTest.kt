@@ -135,6 +135,7 @@ class AddTaskScreenTest {
         addTaskRobot.tapSave()
         composeRule.waitForIdle()
 
+        taskListRobot.assertTaskDoesNotExist("Task 1")
         taskListRobot.assertTaskIsDisplayed("Task 20")
     }
 }

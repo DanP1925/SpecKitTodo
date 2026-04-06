@@ -25,7 +25,7 @@ class FakeTaskRepository
         override fun getTasks(): Flow<List<Task>> = resultFlow.map { it.getOrThrow() }
 
         override suspend fun addTask(task: Task) {
-            val current = resultFlow.value.getOrElse { emptyList() }
+            val current = resultFlow.value.getOrThrow()
             val newId = (current.maxOfOrNull { it.id } ?: 0L) + 1L
             resultFlow.value = Result.success(current + task.copy(id = newId))
         }

@@ -9,7 +9,7 @@ class AddTaskUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(
         title: String,
-        description: String?,
+        description: String,
         isImportant: Boolean,
         isUrgent: Boolean,
     ) {
@@ -17,7 +17,7 @@ class AddTaskUseCase @Inject constructor(
             Task(
                 id = 0,
                 title = title.trim(),
-                description = description?.trim()?.ifBlank { null },
+                description = description.trim().ifBlank { null },
                 isImportant = isImportant,
                 isUrgent = isUrgent,
                 createdAt = System.currentTimeMillis(),
