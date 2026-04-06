@@ -5,7 +5,7 @@
 
 ## Summary
 
-Add a dedicated Add Task screen to the existing Android task priority list app. Navigation is handled by Jetpack Navigation 3 (`NavDisplay` + developer-owned back stack) with `@Serializable` Kotlin objects as type-safe destinations. The screen is reached via a FAB on the task list. It presents an auto-focused title field, optional description, Important/Urgent toggles, and Save/Cancel actions. Navigating away with modified input shows a "Discard changes?" dialog. Saving inserts via a new `AddTaskUseCase` → `TaskRepository.addTask()` → `TaskDao.insertTask()` (suspend). The ViewModel exposes `AddTaskUiState` for form state and `SharedFlow<AddTaskEvent>` for one-shot navigation signals.
+Add a dedicated Add Task screen to the existing Android task priority list app. Navigation is handled by Jetpack Navigation 3 (`NavDisplay` + developer-owned back stack) with `@Serializable` Kotlin objects as type-safe destinations. The screen is reached via a FAB on the task list. It presents an auto-focused title field, optional description (capped at 140 characters), Important/Urgent toggles, and Save/Cancel actions. Navigating away with modified input shows a "Discard changes?" dialog. Saving inserts via a new `AddTaskUseCase` → `TaskRepository.addTask()` → `TaskDao.insertTask()` (suspend). The ViewModel exposes `AddTaskUiState` for all form and navigation state; navigation back is triggered by `shouldNavigateBack: Boolean` observed directly in the composable — no events flow.
 
 ## Technical Context
 
@@ -29,7 +29,7 @@ Add a dedicated Add Task screen to the existing Android task priority list app. 
 | Spec exists (Principle I) | ✅ Pass | `specs/002-add-task-screen/spec.md` |
 | Single user story scoped (Principle III) | ✅ Pass | US1 only — add a new task |
 | No unresolved clarifications | ✅ Pass | All 5 clarification questions answered |
-| Three-layer architecture maintained (Principle IV) | ✅ Pass | New files placed in correct presentation/domain/data packages; `AddTaskEvent` and `AddTaskUiState` in presentation; `AddTaskUseCase` in domain |
+| Three-layer architecture maintained (Principle IV) | ✅ Pass | New files placed in correct presentation/domain/data packages; `AddTaskUiState` and `TitleValidationError` in presentation; `AddTaskUseCase` in domain |
 | Technology stack matches standards | ✅ Pass | Kotlin, Compose, Room, Hilt, Coroutines, ktlint. Navigation 3 is an additive dependency not covered by the constitution's locked list — no amendment required. |
 | Test layers all present (Testing Standards) | ✅ Pass | JUnit 5 unit tests, Compose Testing + Robots, ViewModel tests, Repository tests |
 
@@ -69,10 +69,10 @@ app/
 │   │   │   │   │   ├── TaskListSemantics.kt             # unchanged
 │   │   │   │   │   └── TaskListTestTags.kt              # updated: add FAB test tag constant
 │   │   │   │   ├── addtask/
-│   │   │   │   │   ├── AddTaskScreen.kt                 # NEW: form composable
+│   │   │   │   │   ├── AddTaskScreen.kt                 # NEW: form composable + stateless content + preview
 │   │   │   │   │   ├── AddTaskViewModel.kt              # NEW: @HiltViewModel
 │   │   │   │   │   ├── AddTaskUiState.kt                # NEW: form state data class
-│   │   │   │   │   ├── AddTaskEvent.kt                  # NEW: sealed interface for VM events
+│   │   │   │   │   ├── TitleValidationError.kt          # NEW: enum for title validation errors
 │   │   │   │   │   └── AddTaskTestTags.kt               # NEW: Compose test tag constants
 │   │   │   │   └── theme/
 │   │   │   │       └── Theme.kt                         # unchanged

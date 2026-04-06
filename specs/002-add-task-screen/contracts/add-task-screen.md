@@ -14,9 +14,9 @@ fun AddTaskScreen(
 )
 ```
 
-**Responsibilities**: Collect `AddTaskUiState` from ViewModel; render the form; delegate all events to ViewModel; call `onNavigateBack` when ViewModel signals navigation.
+**Responsibilities**: Collect `AddTaskUiState` from ViewModel; render the form; delegate all events to ViewModel; call `onNavigateBack` when `uiState.shouldNavigateBack` is `true`.
 
-**Navigation contract**: `onNavigateBack` is called by the ViewModel after a successful save or confirmed discard. The caller (`AppNavGraph`) wires this to `backStack.removeLastOrNull()`.
+**Navigation contract**: The composable observes `uiState` via a `LaunchedEffect`, filters for `shouldNavigateBack == true`, and calls `onNavigateBack()`. No events flow or sealed interface is involved. The caller (`AppNavGraph`) wires this to `backStack.removeLastOrNull()`.
 
 ---
 
@@ -41,23 +41,15 @@ fun TaskListScreen(
 | Event | Method | Effect |
 |-------|--------|--------|
 | Title field changed | `onTitleChanged(value: String)` | Update `title`, set `isDirty = true`, clear `titleError` |
-| Description changed | `onDescriptionChanged(value: String)` | Update `description`, set `isDirty = true` |
+| Description changed | `onDescriptionChanged(value: String)` | Update `description` (capped at 140 chars), set `isDirty = true` |
 | Important toggled | `onImportantToggled()` | Flip `isImportant`, set `isDirty = true` |
 | Urgent toggled | `onUrgentToggled()` | Flip `isUrgent`, set `isDirty = true` |
-| Save tapped | `onSave()` | Validate → if invalid set `titleError`; if valid invoke `AddTaskUseCase` then signal `onNavigateBack` |
-| Discard confirmed | `onDiscardConfirmed()` | Signal `onNavigateBack` without saving |
+| Save tapped | `onSave()` | Validate → if invalid set `titleError`; if valid set `isSaving = true`, invoke `AddTaskUseCase`, then set `shouldNavigateBack = true` |
+| Back/Cancel pressed (dirty) | `onDiscardRequested()` | Set `showDiscardDialog = true` |
+| Dialog dismissed | `onDiscardDismissed()` | Set `showDiscardDialog = false` |
+| Discard confirmed | `onDiscardConfirmed()` | Set `shouldNavigateBack = true`, clear `showDiscardDialog` |
 
-**Event signal**: The ViewModel exposes a `SharedFlow<AddTaskEvent>` (see below). `AddTaskScreen` collects it in a `LaunchedEffect` and dispatches each event to the appropriate callback or local UI action.
-
-### `AddTaskEvent` — `presentation/addtask/AddTaskEvent.kt`
-
-```kotlin
-sealed interface AddTaskEvent {
-    data object NavigateBack : AddTaskEvent
-}
-```
-
-`NavigateBack` is emitted after a successful save or a confirmed discard. `AddTaskScreen` calls `onNavigateBack()` upon receiving it. Additional events (e.g. `ShowSnackbar`) can be added here without touching `AddTaskUiState`.
+**Navigation signal**: Navigation is driven entirely by `shouldNavigateBack: Boolean` in `AddTaskUiState`. There is no events flow or sealed interface — the composable observes state directly.
 
 ---
 
@@ -100,8 +92,11 @@ Defined in `presentation/addtask/AddTaskTestTags.kt`:
 | `IMPORTANT_TOGGLE` | `"add_task_important"` | Important toggle |
 | `URGENT_TOGGLE` | `"add_task_urgent"` | Urgent toggle |
 | `SAVE_BUTTON` | `"add_task_save"` | Save `Button` |
+| `CANCEL_BUTTON` | `"add_task_cancel"` | Cancel `IconButton` in `TopAppBar` |
 | `DISCARD_DIALOG` | `"add_task_discard_dialog"` | Discard `AlertDialog` |
 | `DISCARD_CONFIRM` | `"add_task_discard_confirm"` | "Discard" button inside dialog |
+| `KEEP_EDITING_BUTTON` | `"add_task_keep_editing"` | "Keep Editing" button inside dialog |
+| `TITLE_ERROR` | `"add_task_title_error"` | Title error `Text` below field |
 
 ---
 

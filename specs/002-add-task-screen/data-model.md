@@ -121,30 +121,42 @@ data class AddTaskUiState(
     val description: String = "",
     val isImportant: Boolean = false,
     val isUrgent: Boolean = false,
-    val titleError: String? = null,  // non-null when title validation fails
-    val isDirty: Boolean = false,    // true once any field is first modified
+    val titleError: TitleValidationError? = null,  // non-null when title validation fails
+    val isDirty: Boolean = false,                  // true once any field is first modified
+    val isSaving: Boolean = false,                 // true while Room insert is in-flight
+    val showDiscardDialog: Boolean = false,        // true while discard confirmation dialog is visible
+    val shouldNavigateBack: Boolean = false,       // true after successful save or confirmed discard
 )
 ```
 
+### `TitleValidationError` — `presentation/addtask/TitleValidationError.kt`
+
+```kotlin
+enum class TitleValidationError { BLANK }
+```
+
+Used as the type of `AddTaskUiState.titleError` so the UI can map each case to a localized string without embedding message text in the ViewModel.
+
 ## Validation Rules
 
-| Field | Rule | Error message |
-|-------|------|---------------|
-| title | Non-blank after `trim()` | "Title is required" |
-| description | Optional; blank → stored as null | — |
+| Field | Rule | Error |
+|-------|------|-------|
+| title | Non-blank after `trim()` | `TitleValidationError.BLANK` |
+| description | Optional; capped at 140 characters; blank → stored as null | — |
 
-Validation fires in `AddTaskViewModel.onSave()` before invoking `AddTaskUseCase`.
+Validation fires in `AddTaskViewModel.onSave()` before invoking `AddTaskUseCase`. Description is truncated via `take(140)` in `onDescriptionChanged`.
 
 ## Package Layout (new files)
 
 ```
 presentation/
 ├── navigation/
-│   ├── AppDestinations.kt   # @Serializable destination objects
-│   └── AppNavGraph.kt       # NavDisplay + entryProvider
+│   ├── AppDestinations.kt      # @Serializable destination objects
+│   └── AppNavGraph.kt          # NavDisplay + entryProvider
 └── addtask/
-    ├── AddTaskScreen.kt     # Composable
-    ├── AddTaskViewModel.kt  # @HiltViewModel
-    ├── AddTaskUiState.kt    # form state data class
-    └── AddTaskEvent.kt      # sealed interface for one-shot VM events
+    ├── AddTaskScreen.kt        # Composable
+    ├── AddTaskViewModel.kt     # @HiltViewModel
+    ├── AddTaskUiState.kt       # form state data class
+    ├── TitleValidationError.kt # enum for title validation errors
+    └── AddTaskTestTags.kt      # Compose test tag constants
 ```

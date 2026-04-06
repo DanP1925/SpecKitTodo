@@ -51,7 +51,7 @@ Fix violations:
 | `presentation/addtask/AddTaskScreen.kt` | Form composable |
 | `presentation/addtask/AddTaskViewModel.kt` | Form ViewModel |
 | `presentation/addtask/AddTaskUiState.kt` | Form state data class |
-| `presentation/addtask/AddTaskEvent.kt` | Sealed interface for one-shot ViewModel events |
+| `presentation/addtask/TitleValidationError.kt` | Enum for title validation errors |
 | `presentation/addtask/AddTaskTestTags.kt` | Compose test tag constants |
 | `domain/usecase/AddTaskUseCase.kt` | Insert use case |
 | `androidTest/.../addtask/robots/AddTaskRobot.kt` | UI test robot |
