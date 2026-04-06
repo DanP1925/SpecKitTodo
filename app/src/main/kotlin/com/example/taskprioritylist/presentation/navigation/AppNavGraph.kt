@@ -25,6 +25,7 @@ fun AppNavGraph() {
             entryProvider {
                 entry<TaskList> {
                     TaskListScreen(
+                        // Guard: prevent pushing duplicate AddTask entries if the FAB is double-tapped
                         onAddTask = { if (backStack.lastOrNull() !is AddTask) backStack.add(AddTask) },
                     )
                 }

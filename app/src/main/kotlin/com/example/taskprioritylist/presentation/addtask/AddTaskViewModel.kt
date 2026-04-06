@@ -27,8 +27,7 @@ class AddTaskViewModel @Inject constructor(
     }
 
     fun onDescriptionChanged(description: String) {
-        if (description.length > MAX_DESCRIPTION_LENGTH) return
-        _uiState.update { it.copy(description = description, isDirty = true) }
+        _uiState.update { it.copy(description = description.take(MAX_DESCRIPTION_LENGTH), isDirty = true) }
     }
 
     fun onImportantToggled() {
@@ -48,13 +47,18 @@ class AddTaskViewModel @Inject constructor(
         }
         _uiState.update { it.copy(isSaving = true) }
         viewModelScope.launch {
-            addTaskUseCase(
-                title = state.title,
-                description = state.description,
-                isImportant = state.isImportant,
-                isUrgent = state.isUrgent,
-            )
-            _uiState.update { it.copy(hasSavedSuccessfully = true) }
+            runCatching {
+                addTaskUseCase(
+                    title = state.title,
+                    description = state.description,
+                    isImportant = state.isImportant,
+                    isUrgent = state.isUrgent,
+                )
+            }.onSuccess {
+                _uiState.update { it.copy(shouldNavigateBack = true) }
+            }.onFailure {
+                _uiState.update { it.copy(isSaving = false) }
+            }
         }
     }
 
@@ -67,6 +71,6 @@ class AddTaskViewModel @Inject constructor(
     }
 
     fun onDiscardConfirmed() {
-        _uiState.update { it.copy(showDiscardDialog = false, hasSavedSuccessfully = true) }
+        _uiState.update { it.copy(isDirty = false, showDiscardDialog = false, shouldNavigateBack = true) }
     }
 }

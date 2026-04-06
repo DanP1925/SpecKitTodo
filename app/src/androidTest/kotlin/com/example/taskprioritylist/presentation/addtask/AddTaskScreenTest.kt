@@ -118,6 +118,23 @@ class AddTaskScreenTest {
     }
 
     @Test
+    fun given_dirty_form_when_back_and_discard_then_screen_closes_without_saving() {
+        taskListRobot.tapFab()
+        composeRule.waitForIdle()
+
+        addTaskRobot.enterTitle("Draft task")
+        addTaskRobot.tapCancel()
+        composeRule.waitForIdle()
+        addTaskRobot.assertDiscardDialogVisible()
+
+        addTaskRobot.tapDiscardInDialog()
+        composeRule.waitForIdle()
+
+        addTaskRobot.assertNotVisible()
+        taskListRobot.assertTaskDoesNotExist("Draft task")
+    }
+
+    @Test
     fun given_scrolled_task_list_when_add_task_and_save_then_scroll_position_is_preserved() {
         val tasks =
             (1..20).map { i ->

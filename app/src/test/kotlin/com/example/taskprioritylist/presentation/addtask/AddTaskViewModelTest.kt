@@ -3,6 +3,7 @@ package com.example.taskprioritylist.presentation.addtask
 import com.example.taskprioritylist.domain.usecase.AddTaskUseCase
 import com.example.taskprioritylist.presentation.addtask.AddTaskViewModel.Companion.MAX_DESCRIPTION_LENGTH
 import com.example.taskprioritylist.utils.MainDispatcherExtension
+import io.mockk.coEvery
 import io.mockk.coJustRun
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -68,12 +69,11 @@ class AddTaskViewModelTest {
         }
 
     @Test
-    fun `GIVEN description exceeds max length WHEN onDescriptionChanged THEN description is not updated`() =
+    fun `GIVEN description exceeds max length WHEN onDescriptionChanged THEN description is truncated to max length`() =
         runTest {
             val sut = AddTaskViewModel(addTaskUseCase)
-            sut.onDescriptionChanged("a".repeat(MAX_DESCRIPTION_LENGTH))
 
-            sut.onDescriptionChanged("a".repeat(MAX_DESCRIPTION_LENGTH + 1))
+            sut.onDescriptionChanged("a".repeat(MAX_DESCRIPTION_LENGTH + 10))
 
             assertEquals("a".repeat(MAX_DESCRIPTION_LENGTH), sut.uiState.value.description)
         }
@@ -154,7 +154,7 @@ class AddTaskViewModelTest {
         }
 
     @Test
-    fun `GIVEN valid title WHEN onSave THEN use case is called and hasSavedSuccessfully is true`() =
+    fun `GIVEN valid title WHEN onSave THEN use case is called and shouldNavigateBack is true`() =
         runTest {
             coJustRun { addTaskUseCase(any(), any(), any(), any()) }
             val sut = AddTaskViewModel(addTaskUseCase)
@@ -162,7 +162,7 @@ class AddTaskViewModelTest {
 
             sut.onSave()
 
-            assertTrue(sut.uiState.value.hasSavedSuccessfully)
+            assertTrue(sut.uiState.value.shouldNavigateBack)
             coVerify(exactly = 1) { addTaskUseCase("Buy milk", any(), false, false) }
         }
 
@@ -176,6 +176,19 @@ class AddTaskViewModelTest {
             sut.onSave()
 
             assertNull(sut.uiState.value.titleError)
+        }
+
+    @Test
+    fun `GIVEN use case throws WHEN onSave THEN isSaving is reset to false`() =
+        runTest {
+            coEvery { addTaskUseCase(any(), any(), any(), any()) } throws RuntimeException("DB error")
+            val sut = AddTaskViewModel(addTaskUseCase)
+            sut.onTitleChanged("Buy milk")
+
+            sut.onSave()
+
+            assertFalse(sut.uiState.value.isSaving)
+            assertFalse(sut.uiState.value.shouldNavigateBack)
         }
 
     @Test
@@ -200,15 +213,16 @@ class AddTaskViewModelTest {
         }
 
     @Test
-    fun `WHEN onDiscardConfirmed THEN hasSavedSuccessfully is true and dialog is hidden`() =
+    fun `WHEN onDiscardConfirmed THEN shouldNavigateBack is true and dialog is hidden and isDirty is false`() =
         runTest {
             val sut = AddTaskViewModel(addTaskUseCase)
             sut.onDiscardRequested()
 
             sut.onDiscardConfirmed()
 
-            assertTrue(sut.uiState.value.hasSavedSuccessfully)
+            assertTrue(sut.uiState.value.shouldNavigateBack)
             assertFalse(sut.uiState.value.showDiscardDialog)
+            assertFalse(sut.uiState.value.isDirty)
             coVerify(exactly = 0) { addTaskUseCase(any(), any(), any(), any()) }
         }
 }

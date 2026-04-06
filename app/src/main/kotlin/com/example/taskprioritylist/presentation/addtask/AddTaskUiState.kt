@@ -9,5 +9,5 @@ data class AddTaskUiState(
     val isDirty: Boolean = false,
     val isSaving: Boolean = false,
     val showDiscardDialog: Boolean = false,
-    val hasSavedSuccessfully: Boolean = false,
+    val shouldNavigateBack: Boolean = false,
 )

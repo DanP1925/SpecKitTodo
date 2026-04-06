@@ -26,7 +26,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -52,8 +51,8 @@ fun AddTaskScreen(
     val lifecycle = LocalLifecycleOwner.current.lifecycle
     val currentOnNavigateBack by rememberUpdatedState(onNavigateBack)
     LaunchedEffect(viewModel, lifecycle) {
-        snapshotFlow { uiState }
-            .filter { it.hasSavedSuccessfully }
+        viewModel.uiState
+            .filter { it.shouldNavigateBack }
             .flowWithLifecycle(lifecycle)
             .collect {
                 currentOnNavigateBack()
@@ -104,7 +103,7 @@ fun AddTaskScreen(
                             if (uiState.isDirty) {
                                 viewModel.onDiscardRequested()
                             } else {
-                                onNavigateBack()
+                                currentOnNavigateBack()
                             }
                         },
                         modifier = Modifier.testTag(AddTaskTestTags.CANCEL_BUTTON),

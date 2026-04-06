@@ -1,7 +1,7 @@
 package com.example.taskprioritylist.presentation.addtask.robots
 
+import androidx.compose.ui.test.assertDoesNotExist
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.assertTextContains
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.compose.ui.test.onNodeWithTag
@@ -56,7 +56,7 @@ class AddTaskRobot(private val rule: ComposeContentTestRule) {
     }
 
     fun assertNotVisible() {
-        rule.onNodeWithTag(AddTaskTestTags.TITLE_FIELD).assertIsNotDisplayed()
+        rule.onNodeWithTag(AddTaskTestTags.TITLE_FIELD).assertDoesNotExist()
     }
 
     fun assertTitleFieldVisible() {
