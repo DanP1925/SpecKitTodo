@@ -98,6 +98,8 @@ app/
 │   │   └── AndroidManifest.xml                          # unchanged
 │   ├── test/
 │   │   └── kotlin/com/example/taskprioritylist/
+│   │       ├── utils/
+│   │       │   └── MainDispatcherExtension.kt           # NEW: JUnit 5 extension for coroutine test dispatcher
 │   │       ├── presentation/tasklist/
 │   │       │   └── TaskListViewModelTest.kt             # unchanged
 │   │       ├── presentation/addtask/
