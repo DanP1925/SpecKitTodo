@@ -1,9 +1,9 @@
 <!--
 ## Sync Impact Report
 
-**Version Change**: 1.0.0 → 1.0.1
-**Bump Rationale**: PATCH — resolved outstanding ⚠ from v1.0.0: updated tasks-template.md to
-align test task language with Principle II (TDD mandatory).
+**Version Change**: 1.0.1 → 1.0.1 (no change)
+**Bump Rationale**: No amendments. Validation run on 2026-04-08 confirmed constitution
+is fully populated, all templates are consistent, and no placeholders remain.
 
 ### Modified Principles
 - None
@@ -15,12 +15,16 @@ align test task language with Principle II (TDD mandatory).
 - None
 
 ### Templates Requiring Updates
-- `.specify/templates/plan-template.md` ✅ — No changes required.
-- `.specify/templates/spec-template.md` ✅ — No changes required.
-- `.specify/templates/tasks-template.md` ✅ — Updated: "Tests are OPTIONAL" replaced with
-  mandatory TDD language per Principle II; section headers updated accordingly.
-- `.specify/templates/agent-file-template.md` ✅ — No changes required.
-- `.specify/templates/checklist-template.md` ✅ — No changes required.
+- `.specify/templates/plan-template.md` ✅ — Constitution Check gate and Complexity
+  Tracking table present; fully consistent with Principles I–V.
+- `.specify/templates/spec-template.md` ✅ — User stories with priorities, acceptance
+  scenarios, requirements, and success criteria align with Principles I and III.
+- `.specify/templates/tasks-template.md` ✅ — TDD-first language enforced; test tasks
+  precede implementation tasks per Principle II.
+- `.specify/templates/agent-file-template.md` ✅ — Generic template; no
+  constitution-specific alignment required.
+- `.specify/templates/checklist-template.md` ✅ — Generic template; no
+  constitution-specific alignment required.
 
 ### Deferred TODOs
 - None.
